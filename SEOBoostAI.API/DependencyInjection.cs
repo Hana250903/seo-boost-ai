@@ -8,6 +8,7 @@ namespace SEOBoostAI.API
         public static IServiceCollection AddWebAPIServices(this IServiceCollection services)
         {
             services.AddScoped<IRankTrackingService, RankTrackingService>();
+            services.AddScoped<IContentOptimizationService, ContentOptimizationService>();
             return services;
         }
     }
