@@ -1,5 +1,6 @@
 ﻿using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
+using SEOBoostAI.Repository.Repositories;
 using SEOBoostAI.Service.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,37 +12,34 @@ namespace SEOBoostAI.Service.Services
 {
     public class RankTrackingService : IRankTrackingService
     {
-        //private readonly UnitOfWork<RankTracking> _unitOfWork;
+        private readonly RankTrackingRepository _repository;
 
-        //public RankTrackingService(UnitOfWork<RankTracking> unitOfWork)
-        //{
-        //    _unitOfWork = unitOfWork;
-        //}
+        public RankTrackingService() => _repository ??= new RankTrackingRepository();
 
-        public Task<int> AddAsync(RankTracking rankTracking)
+        public async Task<int> AddAsync(RankTracking rankTracking)
         {
-            throw new NotImplementedException();
+            return await _repository.CreateAsync(rankTracking);
         }
 
-        public Task<int> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var rankTracking = await _repository.GetByIdAsync(id);
+            return await _repository.RemoveAsync(rankTracking);
         }
 
-        public async Task<PaginationResult<List<RankTracking>>> GetAllAsync(int currentPage, int pageSize)
+        public async Task<List<RankTracking>> GetAllAsync()
         {
-            //return await _unitOfWork.Repository.GetAllAsync(currentPage, pageSize);
-            throw new NotImplementedException();
+            return await _repository.GetAllAsync();
         }
 
-        public Task<RankTracking> GetByIdAsync(int id)
+        public async Task<RankTracking> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _repository.GetByIdAsync(id);
         }
 
-        public Task<int> UpdateAsync(RankTracking rankTracking)
+        public async Task<int> UpdateAsync(RankTracking rankTracking)
         {
-            throw new NotImplementedException();
+            return await _repository.UpdateAsync(rankTracking);
         }
     }
 }
