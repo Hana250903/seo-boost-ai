@@ -13,6 +13,7 @@ namespace SEOBoostAI.API
             services.AddScoped<IAuditReportService, AuditReportService>();
             services.AddScoped<IContentOptimizationService, ContentOptimizationService>();
             services.AddScoped<IKeywordService, KeywordService>();
+            services.AddScoped<IElementService, ElementService>();
             return services;
         }
     }
