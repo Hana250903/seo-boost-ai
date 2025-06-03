@@ -9,6 +9,7 @@ namespace SEOBoostAI.API
         {
             services.AddScoped<IRankTrackingService, RankTrackingService>();
             services.AddScoped<IContentOptimizationService, ContentOptimizationService>();
+            services.AddScoped<IKeywordService, KeywordService>();
             return services;
         }
     }

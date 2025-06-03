@@ -13,33 +13,32 @@ namespace SEOBoostAI.Service.Services
     {
         private readonly KeywordRepository _repository;
 
-        public KeywordService(KeywordRepository repository)
+        public KeywordService() => _repository = new KeywordRepository();
+
+        public async Task<int> AddAsync(Keyword keyword)
         {
-            _repository = repository;
-        }
-        public Task<int> AddAsync(Keyword keyword)
-        {
-            throw new NotImplementedException();
+            return await _repository.CreateAsync(keyword);
         }
 
-        public Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var keyword = await _repository.GetByIdAsync(id);
+            return await _repository.RemoveAsync(keyword);
         }
 
-        public Task<List<Keyword>> GetAllAsync()
+        public async Task<List<Keyword>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _repository.GetAllAsync();
         }
 
-        public Task<Keyword> GetByIdAsync(int id)
+        public async Task<Keyword> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _repository.GetByIdAsync(id);
         }
 
-        public Task<int> UpdateAsync(Keyword keyword)
+        public async Task<int> UpdateAsync(Keyword keyword)
         {
-            throw new NotImplementedException();
+            return await _repository.UpdateAsync(keyword);
         }
     }
 }
