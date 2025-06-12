@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -12,6 +12,12 @@ namespace SEOBoostAI.Service.Ultils
 {
     public class GenerateJWTToken
     {
+        /// <summary>
+        /// Generates a JWT access token with the specified claims and expiration, using configuration settings for issuer, audience, secret key, and validity period.
+        /// </summary>
+        /// <param name="authClaims">The claims to include in the JWT token.</param>
+        /// <param name="currentTime">The base time from which the token's expiration is calculated.</param>
+        /// <returns>A signed <see cref="JwtSecurityToken"/> representing the access token.</returns>
         public static JwtSecurityToken CreateToken(List<Claim> authClaims, IConfiguration configuration, DateTime currentTime)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:SecretKey"]));
@@ -27,6 +33,12 @@ namespace SEOBoostAI.Service.Ultils
 
             return token;
         }
+        /// <summary>
+        /// Generates a JWT refresh token with the specified claims and expiration based on configuration settings.
+        /// </summary>
+        /// <param name="authClaims">Claims to include in the refresh token.</param>
+        /// <param name="currentTime">The base time from which the token's expiration is calculated.</param>
+        /// <returns>A <see cref="JwtSecurityToken"/> representing the refresh token.</returns>
         public static JwtSecurityToken CreateRefreshToken(List<Claim> authClaims, IConfiguration configuration, DateTime currentTime)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:SecretKey"]));
