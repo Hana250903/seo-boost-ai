@@ -10,7 +10,6 @@ namespace SEOBoostAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class KeywordsController : ControllerBase
     {
         private readonly IKeywordService _service;

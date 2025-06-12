@@ -9,7 +9,6 @@ namespace SEOBoostAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class AuditReportsController : ControllerBase
     {
         private readonly IAuditReportService _auditReportService;
