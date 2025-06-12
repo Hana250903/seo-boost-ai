@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Service.Services;
 using SEOBoostAI.Service.Services.Interfaces;
@@ -10,6 +11,7 @@ namespace SEOBoostAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ContentOptimizationsController : ControllerBase
     {
         private readonly IContentOptimizationService _service;
