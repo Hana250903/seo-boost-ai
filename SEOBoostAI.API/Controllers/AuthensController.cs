@@ -27,7 +27,11 @@ namespace SEOBoostAI.API.Controllers
         /// Authenticates a user using a Google credential and returns an access token.
         /// </summary>
         /// <param name="credential">The Google authentication credential received from the client.</param>
-        /// <returns>An HTTP 200 response with the access token if authentication succeeds; otherwise, a 400 Bad Request with an error message.</returns>
+        /// <summary>
+        /// Authenticates a user using a Google credential and returns the authentication result.
+        /// </summary>
+        /// <param name="credential">The Google authentication credential provided by the client.</param>
+        /// <returns>HTTP 200 with the authentication result if successful; otherwise, HTTP 400 with error details.</returns>
         [HttpPost("login-with-google")]
         public async Task<IActionResult> LoginWithGoogle([FromBody] string credential)
         {
