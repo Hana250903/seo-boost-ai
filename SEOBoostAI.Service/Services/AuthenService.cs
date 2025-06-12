@@ -1,4 +1,4 @@
-﻿using Google.Apis.Auth;
+using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SEOBoostAI.Repository.Models;
@@ -21,12 +21,23 @@ namespace SEOBoostAI.Service.Services
         private readonly IConfiguration _configuration;
         private readonly UserRepository _userRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the AuthenService with the specified configuration and user repository.
+        /// </summary>
         public AuthenService(IConfiguration configuration, UserRepository userRepository)
         {
             _configuration = configuration;
             _userRepository = userRepository;
         }
 
+        /// <summary>
+        /// Authenticates a user using a Google credential, issuing a JWT access token and managing user records.
+        /// </summary>
+        /// <param name="credential">The Google JWT credential string to validate and authenticate.</param>
+        /// <returns>A JWT access token for the authenticated user.</returns>
+        /// <remarks>
+        /// If the user exists, updates their refresh token and returns an access token. If the user does not exist, creates a new user record, assigns tokens, and returns an access token. Throws an exception if the credential is invalid or user creation fails.
+        /// </remarks>
         public async Task<string> LoginWithGoogle(string credential)
         {
             string clientId = _configuration["GoogleCredential:ClientId"];
@@ -99,6 +110,12 @@ namespace SEOBoostAI.Service.Services
             }
         }
 
+        /// <summary>
+        /// Logs out a user by validating the provided refresh token and clearing it from the user's record if valid.
+        /// </summary>
+        /// <param name="RefreshToken">The JWT refresh token to validate and invalidate.</param>
+        /// <param name="userId">The ID of the user to log out.</param>
+        /// <returns>True if logout succeeds and the refresh token is cleared; otherwise, false.</returns>
         public async Task<bool> LogOut(string RefreshToken, int userId)
         {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:SecretKey"]));
@@ -144,6 +161,11 @@ namespace SEOBoostAI.Service.Services
             }
         }
 
+        /// <summary>
+        /// Generates a JWT access token for the specified user, embedding claims such as email, full name, user ID, and role.
+        /// </summary>
+        /// <param name="user">The user for whom the access token is generated.</param>
+        /// <returns>A serialized JWT access token string.</returns>
         private async Task<string> GenerateAccessToken(User user)
         {
             var authClaims = new List<Claim>();
@@ -158,6 +180,11 @@ namespace SEOBoostAI.Service.Services
             return new JwtSecurityTokenHandler().WriteToken(accessToken);
         }
 
+        /// <summary>
+        /// Generates a JWT refresh token containing the specified email as a claim.
+        /// </summary>
+        /// <param name="email">The email address to include in the token claims.</param>
+        /// <returns>A serialized JWT refresh token string.</returns>
         private string GenerateRefreshToken(string email)
         {
             var claims = new List<Claim>();

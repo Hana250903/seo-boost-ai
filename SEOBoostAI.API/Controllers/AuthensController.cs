@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Service.Services;
 using SEOBoostAI.Service.Services.Interfaces;
@@ -13,12 +13,20 @@ namespace SEOBoostAI.API.Controllers
         private readonly IAuthenService _authenService;
         private readonly ICurrentUserService _currentUserService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthensController"/> with the specified authentication and current user services.
+        /// </summary>
         public AuthensController(IAuthenService authenService, ICurrentUserService currentUserService)
         {
             _authenService = authenService;
             _currentUserService = currentUserService;
         }
 
+        /// <summary>
+        /// Authenticates a user using a Google credential and returns an access token.
+        /// </summary>
+        /// <param name="credential">The Google authentication credential received from the client.</param>
+        /// <returns>An HTTP 200 response with the access token if authentication succeeds; otherwise, a 400 Bad Request with an error message.</returns>
         [HttpPost("login-with-google")]
         public async Task<IActionResult> LoginWithGoogle([FromBody] string credential)
         {
@@ -33,6 +41,11 @@ namespace SEOBoostAI.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Logs out the current user by invalidating the provided refresh token.
+        /// </summary>
+        /// <param name="refreshToken">The refresh token to be invalidated.</param>
+        /// <returns>An HTTP 200 response with the logout result, or HTTP 400 if an error occurs.</returns>
         [HttpPost("log-out")]
         public async Task<IActionResult> LogOut(string refreshToken)
         {

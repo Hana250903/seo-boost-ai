@@ -9,7 +9,6 @@ namespace SEOBoostAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class RankTrackingsController : ControllerBase
     {
         private readonly IRankTrackingService _service;
