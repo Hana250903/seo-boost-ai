@@ -44,16 +44,11 @@ public partial class SEOBoostAIContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
-
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=HANAYUKI\\SQLEXPRESS;Initial Catalog=SEOBoostAI;Persist Security Info=True;User ID=HANAYUKI;Password=123456;Encrypt=False");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AuditReport>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AuditRep__3214EC27A0DC36C6");
+            entity.HasKey(e => e.Id).HasName("PK__AuditRep__3214EC274D7722AB");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
@@ -77,12 +72,12 @@ public partial class SEOBoostAIContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.AuditReports)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__AuditRepo__UserI__5535A963");
+                .HasConstraintName("FK__AuditRepo__UserI__5441852A");
         });
 
         modelBuilder.Entity<ContentOptimization>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ContentO__3214EC279A637341");
+            entity.HasKey(e => e.Id).HasName("PK__ContentO__3214EC272351F7D2");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.ContentLenght)
@@ -104,12 +99,12 @@ public partial class SEOBoostAIContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.ContentOptimizations)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ContentOp__UserI__5AEE82B9");
+                .HasConstraintName("FK__ContentOp__UserI__59FA5E80");
         });
 
         modelBuilder.Entity<Element>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Elements__3214EC2747A565E8");
+            entity.HasKey(e => e.Id).HasName("PK__Elements__3214EC27F85C08B0");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CurrentValue)
@@ -129,7 +124,7 @@ public partial class SEOBoostAIContext : DbContext
 
         modelBuilder.Entity<Keyword>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Keywords__3214EC27F812BA61");
+            entity.HasKey(e => e.Id).HasName("PK__Keywords__3214EC27ED3B039B");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Competition)
@@ -154,12 +149,12 @@ public partial class SEOBoostAIContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Keywords)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Keywords__UserID__4F7CD00D");
+                .HasConstraintName("FK__Keywords__UserID__4E88ABD4");
         });
 
         modelBuilder.Entity<RankTracking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RankTrac__3214EC2787FA85BC");
+            entity.HasKey(e => e.Id).HasName("PK__RankTrac__3214EC2736F4BB46");
 
             entity.ToTable("RankTracking");
 
@@ -170,14 +165,14 @@ public partial class SEOBoostAIContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.RankTrackings)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RankTrack__UserI__52593CB8");
+                .HasConstraintName("FK__RankTrack__UserI__5165187F");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC276EA14300");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC27EA834165");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E483BFA6B6").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E478F4CEDB").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AccountType)
@@ -190,14 +185,11 @@ public partial class SEOBoostAIContext : DbContext
             entity.Property(e => e.FullName)
                 .IsRequired()
                 .HasMaxLength(255);
-            entity.Property(e => e.Password)
-                .IsRequired()
-                .HasMaxLength(255);
+            entity.Property(e => e.GoogleId).HasColumnName("GoogleID");
+            entity.Property(e => e.Password).HasMaxLength(255);
             entity.Property(e => e.Role)
-                .IsRequired()
                 .HasMaxLength(50)
-                .HasDefaultValue("user");
-            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("(getdate())");
+                .HasDefaultValue("User");
             entity.Property(e => e.Username)
                 .IsRequired()
                 .HasMaxLength(255);

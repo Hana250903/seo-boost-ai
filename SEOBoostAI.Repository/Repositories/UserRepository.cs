@@ -1,4 +1,5 @@
-﻿using SEOBoostAI.Repository.GenericRepository;
+﻿using Microsoft.EntityFrameworkCore;
+using SEOBoostAI.Repository.GenericRepository;
 using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
 using System;
@@ -34,6 +35,11 @@ namespace SEOBoostAI.Repository.Repositories
                 Items = users
             };
             return result;
+        }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

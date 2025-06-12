@@ -399,6 +399,12 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+# Ignore settings files that may contain secrets
+appsettings.Development.json
+appsettings.Production.json
+local.settings.json
+/appsettings.json
+
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 

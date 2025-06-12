@@ -23,9 +23,13 @@ public partial class User
 
     public string AccountType { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public string GoogleId { get; set; }
 
-    public DateTime UpdatedAt { get; set; }
+    public string AccessToken { get; set; }
+
+    public string RefreshToken { get; set; }
+
+    public DateTime CreatedAt { get; set; }
 
     public virtual ICollection<AuditReport> AuditReports { get; set; } = new List<AuditReport>();
 
