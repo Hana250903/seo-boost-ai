@@ -13,14 +13,23 @@ namespace SEOBoostAI.Service.Services.Interfaces
         /// Authenticates a user using a Google credential and returns an authentication token or session identifier.
         /// </summary>
         /// <param name="credential">The Google credential string obtained from the client.</param>
-        /// <returns>A task that resolves to an authentication token or session identifier.</returns>
+        /// <summary>
+/// Authenticates a user using a Google credential and returns the authentication result.
+/// </summary>
+/// <param name="credential">The Google credential string to authenticate with.</param>
+/// <returns>A task that resolves to a <see cref="ResultModel"/> containing authentication details.</returns>
         public Task<ResultModel> LoginWithGoogle(string credential);
         /// <summary>
         /// Asynchronously logs out a user by invalidating the specified refresh token.
         /// </summary>
         /// <param name="refreshToken">The refresh token to be invalidated.</param>
         /// <param name="userId">The ID of the user to log out.</param>
-        /// <returns>A task that resolves to true if logout is successful; otherwise, false.</returns>
+        /// <summary>
+/// Asynchronously logs out a user by invalidating the specified refresh token.
+/// </summary>
+/// <param name="refreshToken">The refresh token to be invalidated.</param>
+/// <param name="userId">The ID of the user to log out.</param>
+/// <returns>True if the logout operation succeeds; otherwise, false.</returns>
         public Task<bool> LogOut(string refreshToken, int userId);
     }
 }

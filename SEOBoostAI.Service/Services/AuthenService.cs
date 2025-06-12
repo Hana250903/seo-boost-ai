@@ -38,6 +38,13 @@ namespace SEOBoostAI.Service.Services
         /// <returns>A JWT access token for the authenticated user.</returns>
         /// <remarks>
         /// If the user exists, updates their refresh token and returns an access token. If the user does not exist, creates a new user record, assigns tokens, and returns an access token. Throws an exception if the credential is invalid or user creation fails.
+        /// <summary>
+        /// Authenticates a user using a Google credential and returns access and refresh tokens.
+        /// </summary>
+        /// <param name="credential">The Google JWT credential string to validate and authenticate.</param>
+        /// <returns>A <see cref="ResultModel"/> containing the authentication result, including access and refresh tokens if successful.</returns>
+        /// <remarks>
+        /// If the user does not exist, a new user account is created using information from the Google payload.
         /// </remarks>
         public async Task<ResultModel> LoginWithGoogle(string credential)
         {
