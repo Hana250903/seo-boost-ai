@@ -1,6 +1,7 @@
 using Google.Apis.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Repository.Repositories;
 using SEOBoostAI.Service.Services.Interfaces;
@@ -38,7 +39,7 @@ namespace SEOBoostAI.Service.Services
         /// <remarks>
         /// If the user exists, updates their refresh token and returns an access token. If the user does not exist, creates a new user record, assigns tokens, and returns an access token. Throws an exception if the credential is invalid or user creation fails.
         /// </remarks>
-        public async Task<string> LoginWithGoogle(string credential)
+        public async Task<ResultModel> LoginWithGoogle(string credential)
         {
             string clientId = _configuration["GoogleCredential:ClientId"];
 
@@ -65,7 +66,14 @@ namespace SEOBoostAI.Service.Services
 
                 await _userRepository.UpdateAsync(existUser);
 
-                return accessToken;
+                return new ResultModel()
+                {
+                    Success = true,
+                    Message = "Login successfully",
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                };
+                    
             }
             else
             {
@@ -98,7 +106,13 @@ namespace SEOBoostAI.Service.Services
 
                     if (result > 0)
                     {
-                        return accessToken;
+                        return new ResultModel()
+                        {
+                            Success = true,
+                            Message = "Login successfully",
+                            AccessToken = accessToken,
+                            RefreshToken = refreshToken
+                        };
                     }
 
                     throw new Exception("");

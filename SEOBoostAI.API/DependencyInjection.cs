@@ -1,6 +1,7 @@
 ﻿using SEOBoostAI.Repository.Repositories;
 using SEOBoostAI.Service.Services;
 using SEOBoostAI.Service.Services.Interfaces;
+using SEOBoostAI.Service.Ultils;
 
 namespace SEOBoostAI.API
 {
@@ -14,6 +15,10 @@ namespace SEOBoostAI.API
             services.AddScoped<IContentOptimizationService, ContentOptimizationService>();
             services.AddScoped<IKeywordService, KeywordService>();
             services.AddScoped<IElementService, ElementService>();
+            services.AddScoped<IAuthenService, AuthenService>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<UserRepository>();
+            services.AddHttpClient();
             return services;
         }
     }

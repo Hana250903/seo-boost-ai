@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Service.Services;
 using SEOBoostAI.Service.Services.Interfaces;
 using SEOBoostAI.Service.Ultils;
@@ -32,12 +33,16 @@ namespace SEOBoostAI.API.Controllers
         {
             try
             {
-                var accessToken = await _authenService.LoginWithGoogle(credential);
-                return Ok(new { AccessToken = accessToken });
+                var result = await _authenService.LoginWithGoogle(credential);
+                if (result.Success)
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest();
             }
         }
 
