@@ -42,7 +42,7 @@ namespace SEOBoostAI.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
         }
 
@@ -65,7 +65,7 @@ namespace SEOBoostAI.API.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex);
             }
 
         }
