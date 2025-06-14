@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SEOBoostAI.Repository.GenericRepository;
 using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
@@ -14,6 +14,12 @@ namespace SEOBoostAI.Repository.Repositories
     {
         public ElementRepository() { }
 
+        /// <summary>
+        /// Retrieves a paginated list of Element entities along with pagination metadata.
+        /// </summary>
+        /// <param name="currentPage">The current page number to retrieve.</param>
+        /// <param name="pageSize">The number of items per page.</param>
+        /// <returns>A PaginationResult containing the list of Element entities for the specified page and pagination details.</returns>
         public async Task<PaginationResult<List<Element>>> GetUserWithPaginateAsync(int currentPage, int pageSize)
         {
             var elements = await GetAllAsync();
@@ -37,6 +43,11 @@ namespace SEOBoostAI.Repository.Repositories
             return result;
         }
 
+        /// <summary>
+        /// Adds a list of Element entities to the database in a single batch operation.
+        /// </summary>
+        /// <param name="elements">The list of Element entities to add.</param>
+        /// <returns>The number of rows affected if the operation is successful; otherwise, 0.</returns>
         public async Task<int> CreateRangeAsync(List<Element> elements)
         {
             await _context.Elements.AddRangeAsync(elements);

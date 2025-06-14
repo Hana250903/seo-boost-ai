@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Repository.ModelExtensions;
@@ -47,12 +47,25 @@ namespace SEOBoostAI.API.Controllers
             return await _auditReportService.UpdateAuditAsync(AuditReport);
         }
 
+        /// <summary>
+        /// Deletes the audit report with the specified ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the audit report to delete.</param>
+        /// <returns>True if the audit report was successfully deleted; otherwise, false.</returns>
         [HttpDelete]
         public async Task<bool> DeleteAuditReport(int id)
         {
             return await _auditReportService.DeleteAuditAsync(id);
         }
 
+        /// <summary>
+        /// Analyzes the specified URL for a given user and returns the audit analysis result.
+        /// </summary>
+        /// <param name="userId">The ID of the user requesting the analysis.</param>
+        /// <param name="url">The URL to be analyzed, provided as a query parameter.</param>
+        /// <returns>
+        /// An HTTP 200 response with the analysis result if successful; otherwise, an HTTP 400 response with an error message.
+        /// </returns>
         [HttpGet("analyze-url/{userId}")]
         public async Task<IActionResult> AnalyzeUrl(int userId, [FromQuery] string url)
         {

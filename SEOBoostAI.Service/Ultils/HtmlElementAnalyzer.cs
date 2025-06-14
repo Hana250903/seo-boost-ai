@@ -1,4 +1,4 @@
-﻿using HtmlAgilityPack;
+using HtmlAgilityPack;
 using SEOBoostAI.Repository.Models;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,12 @@ namespace SEOBoostAI.Service.Ultils
 {
     public static class HtmlElementAnalyzer
     {
+        /// <summary>
+        /// Analyzes the HTML content of the specified URL, evaluating key SEO-relevant elements and attributes.
+        /// </summary>
+        /// <param name="url">The URL of the web page to analyze.</param>
+        /// <param name="auditId">The audit report identifier to associate with each analyzed element.</param>
+        /// <returns>A list of <see cref="Element"/> objects representing the analysis results for important HTML elements, including their status, importance, and descriptive feedback.</returns>
         public static async System.Threading.Tasks.Task<List<Element>> AnalyzeUrlAsync(string url, int auditId)
         {
             var httpClient = new HttpClient();
@@ -164,6 +170,14 @@ namespace SEOBoostAI.Service.Ultils
             return results ?? new List<Element>();
         }
 
+        /// <summary>
+        /// Asynchronously retrieves the HTML content from the specified URL.
+        /// </summary>
+        /// <param name="url">The URL to fetch HTML content from.</param>
+        /// <returns>The HTML content as a string.</returns>
+        /// <exception cref="Exception">
+        /// Thrown if the connection fails, the HTTP response is not successful, or the content is not HTML.
+        /// </exception>
         public static async Task<string> FetchHtmlAsync(string url)
         {
             var httpClient = new HttpClient();

@@ -1,4 +1,4 @@
-﻿using SEOBoostAI.Repository.ModelExtensions;
+using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Repository.Repositories;
 using SEOBoostAI.Service.Services.Interfaces;
@@ -15,12 +15,24 @@ namespace SEOBoostAI.Service.Services
         private readonly AuditReportRepository _auditReportRepository;
         private readonly ElementService _elementService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuditReportService"/> class with default repository and element service implementations.
+        /// </summary>
         public AuditReportService()
         {
             _auditReportRepository ??= new AuditReportRepository();
             _elementService ??= new ElementService();
         }
 
+        /// <summary>
+        /// Performs a full SEO audit analysis for the specified URL and user, creating an audit report, analyzing page elements, calculating audit metrics, and updating the report with results.
+        /// </summary>
+        /// <param name="url">The URL of the page to audit.</param>
+        /// <param name="userId">The ID of the user initiating the audit.</param>
+        /// <returns>The completed and updated <see cref="AuditReport"/> containing analysis results.</returns>
+        /// <exception cref="Exception">
+        /// Thrown if the audit report cannot be created, if no elements are found for the URL, if element creation fails, or if updating the audit report fails.
+        /// </exception>
         public async Task<AuditReport> AuditAnalyze(string url, int userId)
         {
             var result = 0;
@@ -76,6 +88,11 @@ namespace SEOBoostAI.Service.Services
             return auditReport;
         }
 
+        /// <summary>
+        /// Persists a new audit report and returns its unique identifier.
+        /// </summary>
+        /// <param name="auditReport">The audit report to be created.</param>
+        /// <returns>The unique identifier of the created audit report.</returns>
         public async Task<int> CreateAuditAsync(AuditReport auditReport)
         {
             return await _auditReportRepository.CreateAsync(auditReport);

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Service.Services.Interfaces;
@@ -47,13 +47,22 @@ namespace SEOBoostAI.API.Controllers
             return await _service.UpdateAsync(keyword);
         }
 
-        // DELETE api/<KeywordsController>/5
+        /// <summary>
+        /// Deletes a keyword entity by its unique identifier.
+        /// </summary>
+        /// <param name="id">The unique identifier of the keyword to delete.</param>
+        /// <returns>True if the keyword was successfully deleted; otherwise, false.</returns>
         [HttpDelete("{id}")]
         public async Task<bool> Delete(int id)
         {
             return await _service.DeleteAsync(id);
         }
 
+        /// <summary>
+        /// Retrieves a list of keywords that match the specified search term.
+        /// </summary>
+        /// <param name="keyword">The search term to filter keywords.</param>
+        /// <returns>A list of matching <see cref="Keyword"/> objects.</returns>
         [HttpGet]
         [Route("search/{keyword}")]
         public async Task<List<Keyword>> Get(string keyword)

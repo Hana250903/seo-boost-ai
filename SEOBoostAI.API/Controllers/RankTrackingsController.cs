@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Service.Services.Interfaces;
@@ -46,13 +46,23 @@ namespace SEOBoostAI.API.Controllers
             return await _service.UpdateAsync(rankTracking);
         }
 
-        // DELETE api/<RankTrackingsController>/5
+        /// <summary>
+        /// Deletes a RankTracking record by its ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the RankTracking record to delete.</param>
+        /// <returns>True if the record was successfully deleted; otherwise, false.</returns>
         [HttpDelete("{id}")]
         public async Task<bool> Delete(int id)
         {
             return await _service.DeleteAsync(id);
         }
 
+        /// <summary>
+        /// Retrieves a list of RankTracking records filtered by keyword and user ID.
+        /// </summary>
+        /// <param name="keyword">The keyword to filter rank tracking records.</param>
+        /// <param name="userId">The user ID to filter rank tracking records.</param>
+        /// <returns>A list of RankTracking records matching the specified keyword and user ID.</returns>
         [HttpGet]
         [Route("search/{userId}/{keyword}")]
         public async Task<List<RankTracking>> Get(string keyword, int userId)
