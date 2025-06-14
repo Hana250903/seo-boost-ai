@@ -52,5 +52,22 @@ namespace SEOBoostAI.API.Controllers
         {
             return await _auditReportService.DeleteAuditAsync(id);
         }
+
+        [HttpGet("analyze-url/{userId}")]
+        public async Task<IActionResult> AnalyzeUrl(int userId, [FromQuery] string url)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(url)) return BadRequest("Missing URL");
+
+                var decodedUrl = System.Net.WebUtility.UrlDecode(url); // Optional, thường không cần nếu ASP.NET tự decode
+                var result = await _auditReportService.AuditAnalyze(decodedUrl, userId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

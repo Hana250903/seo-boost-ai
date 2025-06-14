@@ -52,5 +52,12 @@ namespace SEOBoostAI.API.Controllers
         {
             return await _service.DeleteAsync(id);
         }
+
+        [HttpGet]
+        [Route("search/{userId}/{keyword}")]
+        public async Task<List<RankTracking>> Get(string keyword, int userId)
+        {
+            return await _service.GetAllAsync(keyword, userId);
+        }
     }
 }

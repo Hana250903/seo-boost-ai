@@ -18,4 +18,10 @@ public partial class Element
     public string Status { get; set; }
 
     public int Important { get; set; }
+
+    public string Description { get; set; }
+
+    public int? AuditReportId { get; set; }
+
+    public virtual AuditReport AuditReport { get; set; }
 }
