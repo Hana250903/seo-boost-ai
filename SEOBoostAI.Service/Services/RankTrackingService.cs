@@ -32,6 +32,11 @@ namespace SEOBoostAI.Service.Services
             return await _repository.GetAllAsync();
         }
 
+        public async Task<List<RankTracking>> GetAllAsync(string keyword, int userId)
+        {
+            return await _repository.GetAllAsync(keyword, userId);
+        }
+
         public async Task<RankTracking> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);

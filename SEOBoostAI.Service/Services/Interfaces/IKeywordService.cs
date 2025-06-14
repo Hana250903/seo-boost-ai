@@ -10,6 +10,7 @@ namespace SEOBoostAI.Service.Services.Interfaces
     public interface IKeywordService
     {
         Task<List<Keyword>> GetAllAsync();
+        Task<List<Keyword>> GetAllAsync(string keyword);
         Task<Keyword> GetByIdAsync(int id);
         Task<int> AddAsync(Keyword keyword);
         Task<int> UpdateAsync(Keyword keyword);

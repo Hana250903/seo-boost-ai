@@ -13,7 +13,68 @@ namespace SEOBoostAI.Service.Services
     public class AuditReportService : IAuditReportService
     {
         private readonly AuditReportRepository _auditReportRepository;
-        public AuditReportService() => _auditReportRepository ??= new AuditReportRepository();
+        private readonly ElementService _elementService;
+
+        public AuditReportService()
+        {
+            _auditReportRepository ??= new AuditReportRepository();
+            _elementService ??= new ElementService();
+        }
+
+        public async Task<AuditReport> AuditAnalyze(string url, int userId)
+        {
+            var result = 0;
+
+            var auditReport = new AuditReport
+            {
+                CreatedAt = DateTime.UtcNow,
+                UserId = userId,
+                Url = url,
+                CriticalIssue = 0,
+                Warning = 0,
+                Opportunity = 0,
+                OverallScore = 0,
+                PassedCheck = ""
+            };
+
+            var auditId = await _auditReportRepository.CreateAndGetIdAsync(auditReport);
+            if (auditId <= 0)
+            {
+                throw new Exception("Failed to create audit report.");
+            }
+
+            List<Element> elements = await _elementService.AnalyzePageAsync(url, auditId);
+
+            if (elements == null || !elements.Any())
+            {
+                throw new Exception("No elements found for the provided URL.");
+            }
+
+            result = await _elementService.CreateElementsAsync(elements);
+            if (result <= 0)
+            {
+                throw new Exception("Failed to create elements for the audit report.");
+            }
+
+            // Cập nhật thông tin tính toán tổng quan
+            auditReport.Id = auditId;
+            auditReport.CriticalIssue = elements.Count(e => e.Important == 2 && e.Status == "not pass");
+            auditReport.Warning = auditReport.CriticalIssue;
+            auditReport.Opportunity = elements.Count(e => e.Important == 1 && e.Status == "not pass");
+            int passed = elements.Count(e => e.Status == "pass");
+            int total = elements.Count;
+            auditReport.OverallScore = total == 0 ? 0 : (int)Math.Round((double)passed / total * 100);
+            auditReport.PassedCheck = $"{passed}/{total} element passed";
+
+            result = await _auditReportRepository.UpdateAsync(auditReport);
+
+            if (result <= 0)
+            {
+                throw new Exception("Failed to update audit report with calculated scores.");
+            }
+
+            return auditReport;
+        }
 
         public async Task<int> CreateAuditAsync(AuditReport auditReport)
         {

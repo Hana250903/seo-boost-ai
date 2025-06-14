@@ -16,5 +16,6 @@ namespace SEOBoostAI.Service.Services.Interfaces
         Task<int> CreateAuditAsync(AuditReport auditReport);
         Task<int> UpdateAuditAsync(AuditReport auditReport);
         Task<bool> DeleteAuditAsync(int id);
+        Task<AuditReport> AuditAnalyze(string url, int userId);
     }
 }

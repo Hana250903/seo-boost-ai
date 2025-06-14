@@ -2,6 +2,7 @@
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Repository.Repositories;
 using SEOBoostAI.Service.Services.Interfaces;
+using SEOBoostAI.Service.Ultils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,19 @@ namespace SEOBoostAI.Service.Services
 
         public ElementService() => _repository = new ElementRepository();
 
+        public async Task<List<Element>> AnalyzePageAsync(string url, int auditId)
+        {
+            return await HtmlElementAnalyzer.AnalyzeUrlAsync(url, auditId);
+        }
+
         public async Task<int> CreateElementAsync(Element element)
         {
             return await _repository.CreateAsync(element);
+        }
+
+        public async Task<int> CreateElementsAsync(List<Element> elements)
+        {
+            return await _repository.CreateRangeAsync(elements);
         }
 
         public async Task<bool> DeleteElementAsync(int id)

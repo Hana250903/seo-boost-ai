@@ -34,6 +34,4 @@ public partial class ContentOptimization
     public int? Originality { get; set; }
 
     public DateTime? CreatedAt { get; set; }
-
-    public virtual User User { get; set; }
 }

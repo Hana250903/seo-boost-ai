@@ -14,6 +14,4 @@ public partial class RankTracking
     public string Keyword { get; set; }
 
     public int? Rank { get; set; }
-
-    public virtual User User { get; set; }
 }

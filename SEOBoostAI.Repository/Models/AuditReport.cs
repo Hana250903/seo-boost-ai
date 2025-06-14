@@ -15,15 +15,15 @@ public partial class AuditReport
 
     public int OverallScore { get; set; }
 
-    public string CriticalIssue { get; set; }
+    public int CriticalIssue { get; set; }
 
-    public string Warning { get; set; }
+    public int Warning { get; set; }
 
-    public string Opportunity { get; set; }
+    public int Opportunity { get; set; }
 
     public string PassedCheck { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual ICollection<Element> Elements { get; set; } = new List<Element>();
 }

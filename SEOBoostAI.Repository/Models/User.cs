@@ -30,12 +30,4 @@ public partial class User
     public string RefreshToken { get; set; }
 
     public DateTime CreatedAt { get; set; }
-
-    public virtual ICollection<AuditReport> AuditReports { get; set; } = new List<AuditReport>();
-
-    public virtual ICollection<ContentOptimization> ContentOptimizations { get; set; } = new List<ContentOptimization>();
-
-    public virtual ICollection<Keyword> Keywords { get; set; } = new List<Keyword>();
-
-    public virtual ICollection<RankTracking> RankTrackings { get; set; } = new List<RankTracking>();
 }

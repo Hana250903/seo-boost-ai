@@ -27,5 +27,5 @@ public partial class Keyword
 
     public string Trend { get; set; }
 
-    public virtual User User { get; set; }
+    public int Rank { get; set; }
 }
