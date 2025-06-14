@@ -153,7 +153,7 @@ namespace SEOBoostAI.Service.Ultils
                 {
                     Url = url,
                     Element1 = tag,
-                    CurrentValue = "",
+                    CurrentValue = mainValue,
                     Status = status,
                     Important = important,
                     Description = description,

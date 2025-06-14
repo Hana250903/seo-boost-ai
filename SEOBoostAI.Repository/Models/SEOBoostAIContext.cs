@@ -44,15 +44,15 @@ public partial class SEOBoostAIContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
-    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-    //        => optionsBuilder.UseSqlServer("Data Source=HANAYUKI;Initial Catalog=SEOBoostAI;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=False");
+//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//        => optionsBuilder.UseSqlServer("Data Source=HANAYUKI;Initial Catalog=SEOBoostAI;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AuditReport>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AuditRep__3214EC273D8BD712");
+            entity.HasKey(e => e.Id).HasName("PK__AuditRep__3214EC271B2201F7");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
@@ -67,7 +67,7 @@ public partial class SEOBoostAIContext : DbContext
 
         modelBuilder.Entity<ContentOptimization>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ContentO__3214EC27BC0CE92B");
+            entity.HasKey(e => e.Id).HasName("PK__ContentO__3214EC27A4C46D61");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.ContentLenght)
@@ -89,13 +89,11 @@ public partial class SEOBoostAIContext : DbContext
 
         modelBuilder.Entity<Element>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Elements__3214EC2703350B87");
+            entity.HasKey(e => e.Id).HasName("PK__Elements__3214EC270794D100");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AuditReportId).HasColumnName("AuditReportID");
-            entity.Property(e => e.CurrentValue)
-                .IsRequired()
-                .HasMaxLength(255);
+            entity.Property(e => e.CurrentValue).IsRequired();
             entity.Property(e => e.Description).HasMaxLength(255);
             entity.Property(e => e.Element1)
                 .IsRequired()
@@ -115,7 +113,7 @@ public partial class SEOBoostAIContext : DbContext
 
         modelBuilder.Entity<Keyword>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Keywords__3214EC273862EE48");
+            entity.HasKey(e => e.Id).HasName("PK__Keywords__3214EC27DAE011D5");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Competition)
@@ -140,7 +138,7 @@ public partial class SEOBoostAIContext : DbContext
 
         modelBuilder.Entity<RankTracking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RankTrac__3214EC276D11E776");
+            entity.HasKey(e => e.Id).HasName("PK__RankTrac__3214EC27A1758FCB");
 
             entity.ToTable("RankTracking");
 
@@ -151,9 +149,9 @@ public partial class SEOBoostAIContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC274C26F24D");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC27D098DAAB");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E4211162B7").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E485CC21F3").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AccountType)
