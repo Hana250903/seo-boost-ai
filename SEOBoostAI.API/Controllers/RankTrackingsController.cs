@@ -19,7 +19,7 @@ namespace SEOBoostAI.API.Controllers
         private readonly IRankTrackingService _service;
         private readonly ICurrentUserService _currentUserService;
         private readonly HttpClient _httpClient;
-        private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5001";
+        private readonly string _flaskApiBaseUrl = "https://seo-flask-api.azurewebsites.net";
 
         public RankTrackingsController(IRankTrackingService service, ICurrentUserService currentUserService, HttpClient httpClient)
         {
