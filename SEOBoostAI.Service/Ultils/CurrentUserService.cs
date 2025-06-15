@@ -14,21 +14,21 @@ namespace SEOBoostAI.Service.Ultils
     public interface ICurrentUserService
     {
         /// <summary>
-/// Retrieves the current user's unique identifier from the HTTP context claims.
-/// </summary>
-/// <returns>The user's ID as an integer.</returns>
-/// <exception cref="Exception">Thrown if the user is not authenticated or the claim is missing.</exception>
-int GetUserId();
+        /// Retrieves the current user's unique identifier from the HTTP context claims.
+        /// </summary>
+        /// <returns>The user's ID as an integer.</returns>
+        /// <exception cref="Exception">Thrown if the user is not authenticated or the claim is missing.</exception>
+        int GetUserId();
         /// <summary>
-/// Retrieves the email address of the current authenticated user from the HTTP context claims.
-/// </summary>
-/// <returns>The user's email address, or null if the email claim is not present.</returns>
-String getUserEmail();
+        /// Retrieves the email address of the current authenticated user from the HTTP context claims.
+        /// </summary>
+        /// <returns>The user's email address, or null if the email claim is not present.</returns>
+        String getUserEmail();
         /// <summary>
-/// Asynchronously retrieves the current authenticated user's full account information.
-/// </summary>
-/// <returns>A task representing the asynchronous operation, containing the current user's <see cref="User"/> object.</returns>
-Task<User> GetCurrentAccountAsync();
+        /// Asynchronously retrieves the current authenticated user's full account information.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation, containing the current user's <see cref="User"/> object.</returns>
+        Task<User> GetCurrentAccountAsync();
     }
 
     public class CurrentUserService : ICurrentUserService
