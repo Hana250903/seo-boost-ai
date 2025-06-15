@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SEOBoostAI.API.VIewModels.Requests;
@@ -21,6 +21,9 @@ namespace SEOBoostAI.API.Controllers
         private readonly HttpClient _httpClient;
         private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5000";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RankTrackingsController"/> class with the specified services and HTTP client.
+        /// </summary>
         public RankTrackingsController(IRankTrackingService service, ICurrentUserService currentUserService, HttpClient httpClient)
         {
             _service = service;
@@ -63,6 +66,12 @@ namespace SEOBoostAI.API.Controllers
             return await _service.DeleteAsync(id);
         }
 
+        /// <summary>
+        /// Retrieves rank tracking records filtered by keyword and user ID.
+        /// </summary>
+        /// <param name="keyword">The keyword to filter rank tracking records.</param>
+        /// <param name="userId">The user ID to filter rank tracking records.</param>
+        /// <returns>A list of rank tracking records matching the specified keyword and user ID.</returns>
         [HttpGet]
         [Route("search/{userId}/{keyword}")]
         public async Task<List<RankTracking>> Get(string keyword, int userId)
@@ -70,6 +79,11 @@ namespace SEOBoostAI.API.Controllers
             return await _service.GetAllAsync(keyword, userId);
         }
 
+        /// <summary>
+        /// Sends a keyword ranking request to an external Flask API and returns the API's response.
+        /// </summary>
+        /// <param name="inputKeyword">The keyword and user ID information to be sent to the Flask API.</param>
+        /// <returns>The deserialized response from the Flask API if successful; otherwise, an error response with appropriate status code.</returns>
         [HttpPost]
         [Route("rank-tracking")]
         public async Task<IActionResult> Get([FromBody] RankTrackingFlaskApiRequest inputKeyword)

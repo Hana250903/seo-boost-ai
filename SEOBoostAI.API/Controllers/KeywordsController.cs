@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -22,6 +22,9 @@ namespace SEOBoostAI.API.Controllers
         private readonly HttpClient _httpClient;
         private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5000";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeywordsController"/> class with the specified keyword service and HTTP client.
+        /// </summary>
         public KeywordsController(IKeywordService service, HttpClient httpClient)
         {
             _service = service;
@@ -56,19 +59,33 @@ namespace SEOBoostAI.API.Controllers
             return await _service.UpdateAsync(keyword);
         }
 
-        // DELETE api/<KeywordsController>/5
+        /// <summary>
+        /// Deletes a keyword by its ID asynchronously.
+        /// </summary>
+        /// <param name="id">The unique identifier of the keyword to delete.</param>
+        /// <returns>True if the keyword was successfully deleted; otherwise, false.</returns>
         [HttpDelete("{id}")]
         public async Task<bool> Delete(int id)
         {
             return await _service.DeleteAsync(id);
         }
 
+        /// <summary>
+        /// Searches for keywords that match the specified input string.
+        /// </summary>
+        /// <param name="keyword">The search term to filter keywords.</param>
+        /// <returns>A list of keywords matching the search term.</returns>
         [HttpGet("search/{keyword}")]
         public async Task<List<Keyword>> Search(string keyword)
         {
             return await _service.GetAllAsync(keyword);
         }
 
+        /// <summary>
+        /// Sends a keyword to an external Flask API for SEO keyword generation and returns the API's response.
+        /// </summary>
+        /// <param name="inputKeyword">The keyword input to be sent to the Flask API for SEO keyword generation.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the Flask API response or an error message if the operation fails.</returns>
         [HttpPost]
         [Route("search")]
         public async Task<IActionResult> Get([FromBody]KeywordFlaskApiRequest inputKeyword)
