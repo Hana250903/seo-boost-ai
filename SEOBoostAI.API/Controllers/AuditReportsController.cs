@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Repository.ModelExtensions;
@@ -15,12 +15,19 @@ namespace SEOBoostAI.API.Controllers
         private readonly IAuditReportService _auditReportService;
         private readonly ICurrentUserService _currentUserService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuditReportsController"/> with the specified audit report and current user services.
+        /// </summary>
         public AuditReportsController(IAuditReportService auditReportService, ICurrentUserService currentUserService)
         {
             _auditReportService = auditReportService;
             _currentUserService = currentUserService;
         }
 
+        /// <summary>
+        /// Retrieves a list of all audit reports.
+        /// </summary>
+        /// <returns>A list of <see cref="AuditReport"/> objects.</returns>
         [HttpGet]
         public async Task<List<AuditReport>> GetAllAudit()
         {
