@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Service.Services.Interfaces;
+using SEOBoostAI.Service.Ultils;
 
 namespace SEOBoostAI.API.Controllers
 {
@@ -12,14 +13,18 @@ namespace SEOBoostAI.API.Controllers
     public class AuditReportsController : ControllerBase
     {
         private readonly IAuditReportService _auditReportService;
-        public AuditReportsController(IAuditReportService auditReportService)
+        private readonly ICurrentUserService _currentUserService;
+
+        public AuditReportsController(IAuditReportService auditReportService, ICurrentUserService currentUserService)
         {
             _auditReportService = auditReportService;
+            _currentUserService = currentUserService;
         }
 
         [HttpGet]
         public async Task<List<AuditReport>> GetAllAudit()
         {
+            //var userId = _currentUserService.GetUserId();
             return await _auditReportService.GetAllAuditAsync();
         }
 
