@@ -20,7 +20,7 @@ namespace SEOBoostAI.API.Controllers
     {
         private readonly IKeywordService _service;
         private readonly HttpClient _httpClient;
-        private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5000";
+        private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5001";
 
         public KeywordsController(IKeywordService service, HttpClient httpClient)
         {
