@@ -13,6 +13,7 @@ namespace SEOBoostAI.Service.Services.Interfaces
         Task<List<AuditReport>> GetAllAuditAsync();
         Task<PaginationResult<List<AuditReport>>> GetAuditWithPaginateAsync(int currentPage, int pageSize);
         Task<AuditReport> GetAuditByIdAsync(int id);
+        Task<List<AuditReport>> GetByUserId(int userId);
         Task<int> CreateAuditAsync(AuditReport auditReport);
         Task<int> UpdateAuditAsync(AuditReport auditReport);
         Task<bool> DeleteAuditAsync(int id);

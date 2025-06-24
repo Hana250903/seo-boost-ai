@@ -1,4 +1,5 @@
-﻿using SEOBoostAI.Repository.Models;
+﻿using SEOBoostAI.Repository.ModelExtensions;
+using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Repository.Repositories;
 using SEOBoostAI.Service.Services.Interfaces;
 using System;
@@ -31,9 +32,9 @@ namespace SEOBoostAI.Service.Services
             return await _repository.GetAllAsync();
         }
 
-        public async Task<List<Keyword>> GetAllAsync(string keyword)
+        public async Task<PaginationResult<List<Keyword>>> GetAllAsync(string keyword, int pageIndex, int pageSize)
         {
-            return await _repository.GetAllAsync(keyword);
+            return await _repository.GetAllAsync(keyword, pageIndex, pageSize);
         }
 
         public async Task<Keyword> GetByIdAsync(int id)

@@ -38,6 +38,11 @@ namespace SEOBoostAI.Service.Services
             return await _repository.RemoveAsync(element);
         }
 
+        public async Task<List<Element>> ElementNotPass(int auditId)
+        {
+            return await _repository.ElementNotPass(auditId);
+        }
+
         public async Task<List<Element>> GetAllElementAsync()
         {
             return await _repository.GetAllAsync();

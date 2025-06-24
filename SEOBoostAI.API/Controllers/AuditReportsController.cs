@@ -74,5 +74,11 @@ namespace SEOBoostAI.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<List<AuditReport>> GetByUserId(int userId)
+        {
+            return await _auditReportService.GetByUserId(userId);
+        }
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SEOBoostAI.API.VIewModels.Requests;
 using SEOBoostAI.API.VIewModels.Responses;
+using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Service.Services.Interfaces;
 using SEOBoostAI.Service.Ultils;
@@ -19,7 +20,8 @@ namespace SEOBoostAI.API.Controllers
         private readonly IRankTrackingService _service;
         private readonly ICurrentUserService _currentUserService;
         private readonly HttpClient _httpClient;
-        private readonly string _flaskApiBaseUrl = "https://seo-flask-api.azurewebsites.net";
+        //private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5001";
+        private readonly string _flaskApiBaseUrl = "https://seo-flask-api.azurewebsites.net/";
 
         public RankTrackingsController(IRankTrackingService service, ICurrentUserService currentUserService, HttpClient httpClient)
         {
@@ -56,6 +58,12 @@ namespace SEOBoostAI.API.Controllers
             return await _service.UpdateAsync(rankTracking);
         }
 
+        [HttpPatch]
+        public async Task<int> Patch(List<RankTrackingRequest> rankTrackingRequests)
+        {
+            return await _service.UpdateAsync(rankTrackingRequests);
+        }
+
         // DELETE api/<RankTrackingsController>/5
         [HttpDelete("{id}")]
         public async Task<bool> Delete(int id)
@@ -64,10 +72,61 @@ namespace SEOBoostAI.API.Controllers
         }
 
         [HttpGet]
-        [Route("search/{userId}/{keyword}")]
-        public async Task<List<RankTracking>> Get(string keyword, int userId)
+        [Route("rank-tracking/{userId}/{pageIndex}/{pageSize}")]
+        public async Task<PaginationResult<List<RankTracking>>> Get(int userId, int pageIndex, int pageSize)
         {
-            return await _service.GetAllAsync(keyword, userId);
+            //var currentUserId = _currentUserService.GetUserId();
+            var rankTrackingList = await _service.GetAllAsync(userId, pageIndex, pageSize);
+
+            if (rankTrackingList == null || rankTrackingList.Items == null)
+            {
+                return rankTrackingList ?? new PaginationResult<List<RankTracking>>();
+            }
+            string flaskApiEndpoint = $"{_flaskApiBaseUrl}/update-rank-tracking";
+
+            var requestData = new List<RankTrackingUpdateRequest>();
+
+            foreach (var item in rankTrackingList.Items)
+            {
+                var requestItem = new RankTrackingUpdateRequest
+                {
+                    Id = item.Id.ToString(),
+                    InputKeyword = item.Keyword,
+                };
+                requestData.Add(requestItem);
+            }
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync(flaskApiEndpoint, requestData);
+
+                response.EnsureSuccessStatusCode();
+
+                FlaskApiResponse? flaskApiResponse = await response.Content.ReadFromJsonAsync<FlaskApiResponse>();
+
+                if (flaskApiResponse == null)
+                {
+                    throw new Exception("Code 500, failed to deserialize response from Flask API.");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Handle HTTP request errors (e.g., network issues, Flask API not running)
+                Console.Error.WriteLine($"HTTP Request Error: {ex.Message}");
+                throw new Exception($"Error communicating with Flask API: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                // Handle JSON deserialization errors
+                Console.Error.WriteLine($"JSON Deserialization Error: {ex.Message}");
+                throw new Exception($"Error processing Flask API response: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error communicating with Flask API: {ex.Message}");
+            }
+
+            return await _service.GetAllAsync(userId, pageIndex, pageSize);
         }
 
         [HttpPost]

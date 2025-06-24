@@ -18,5 +18,6 @@ namespace SEOBoostAI.Service.Services.Interfaces
         Task<int> UpdateElementAsync(Element element);
         Task<bool> DeleteElementAsync(int id);
         Task<List<Element>> AnalyzePageAsync(string url, int auditId);
+        Task<List<Element>> ElementNotPass(int auditId);
     }
 }
