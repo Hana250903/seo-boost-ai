@@ -102,6 +102,11 @@ namespace SEOBoostAI.Service.Services
             return await _auditReportRepository.GetAuditWithPaginateAsync(currentPage, pageSize);
         }
 
+        public async Task<List<AuditReport>> GetByUserId(int userId)
+        {
+            return await _auditReportRepository.GetByUserId(userId);
+        }
+
         public async Task<int> UpdateAuditAsync(AuditReport auditReport)
         {
             return await _auditReportRepository.UpdateAsync(auditReport);

@@ -32,9 +32,9 @@ namespace SEOBoostAI.Service.Services
             return await _repository.GetAllAsync();
         }
 
-        public async Task<List<RankTracking>> GetAllAsync(string keyword, int userId)
+        public async Task<PaginationResult<List<RankTracking>>> GetAllAsync(int userId, int pageIndex, int pageSize)
         {
-            return await _repository.GetAllAsync(keyword, userId);
+            return await _repository.GetAllAsync(userId, pageIndex, pageSize);
         }
 
         public async Task<RankTracking> GetByIdAsync(int id)
@@ -45,6 +45,11 @@ namespace SEOBoostAI.Service.Services
         public async Task<int> UpdateAsync(RankTracking rankTracking)
         {
             return await _repository.UpdateAsync(rankTracking);
+        }
+
+        public async Task<int> UpdateAsync(List<RankTrackingRequest> rankTrackings)
+        {
+            return await _repository.UpdateAsync(rankTrackings);
         }
     }
 }

@@ -16,9 +16,9 @@ namespace SEOBoostAI.Service.Services
         public ContentOptimizationService() => _repository ??= new ContentOptimizationRepository();
 
 
-        public async Task<int> AddAsync(ContentOptimization contentOptimization)
+        public async Task<ContentOptimization> AddAsync(ContentOptimization contentOptimization)
         {
-            return await _repository.CreateAsync(contentOptimization);
+            return await _repository.CreateEntityAsync(contentOptimization);
         }
 
         public async Task<bool> DeleteAsync(int id)
@@ -35,6 +35,11 @@ namespace SEOBoostAI.Service.Services
         public async Task<ContentOptimization> GetByIdAsync(int id)
         {
             return await _repository.GetByIdAsync(id);
+        }
+
+        public async Task<List<ContentOptimization>> GetByUserIdAsync(int userId)
+        {
+            return await _repository.GetByUserIdAsync(userId);
         }
 
         public async Task<int> UpdateAsync(ContentOptimization contentOptimization)

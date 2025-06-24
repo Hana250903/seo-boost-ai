@@ -48,5 +48,12 @@ namespace SEOBoostAI.Repository.Repositories
 
             return 0;
         }
+
+        public async Task<List<Element>> ElementNotPass(int auditId)
+        {
+            var temp = await _context.Elements.Where(e => e.AuditReportId == auditId && e.Status.Equals("not pass")).ToListAsync();
+
+            return temp ?? new List<Element>();
+        }
     }
 }

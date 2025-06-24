@@ -10,8 +10,9 @@ namespace SEOBoostAI.Service.Services.Interfaces
     public interface IContentOptimizationService
     {
         Task<List<ContentOptimization>> GetAllAsync();
+        Task<List<ContentOptimization>> GetByUserIdAsync(int userId);
         Task<ContentOptimization> GetByIdAsync(int id);
-        Task<int> AddAsync(ContentOptimization contentOptimization);
+        Task<ContentOptimization> AddAsync(ContentOptimization contentOptimization);
         Task<int> UpdateAsync(ContentOptimization contentOptimization);
         Task<bool> DeleteAsync(int id);
     }

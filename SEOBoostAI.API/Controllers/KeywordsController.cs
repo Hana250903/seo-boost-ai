@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using SEOBoostAI.API.VIewModels.Requests;
 using SEOBoostAI.API.VIewModels.Responses;
+using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
 using SEOBoostAI.Service.Services.Interfaces;
 using System.Net.Http;
@@ -20,7 +21,8 @@ namespace SEOBoostAI.API.Controllers
     {
         private readonly IKeywordService _service;
         private readonly HttpClient _httpClient;
-        private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5000";
+        //private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5001";
+        private readonly string _flaskApiBaseUrl = "https://seo-flask-api.azurewebsites.net/";
 
         public KeywordsController(IKeywordService service, HttpClient httpClient)
         {
@@ -63,10 +65,10 @@ namespace SEOBoostAI.API.Controllers
             return await _service.DeleteAsync(id);
         }
 
-        [HttpGet("search/{keyword}")]
-        public async Task<List<Keyword>> Search(string keyword)
+        [HttpGet("search/{keyword}/{pageIndex}/{pageSize}")]
+        public async Task<PaginationResult<List<Keyword>>> Search(string keyword, int pageIndex, int pageSize)
         {
-            return await _service.GetAllAsync(keyword);
+            return await _service.GetAllAsync(keyword, pageIndex, pageSize);
         }
 
         [HttpPost]
