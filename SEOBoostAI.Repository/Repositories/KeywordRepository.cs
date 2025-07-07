@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SEOBoostAI.Repository.GenericRepository;
 using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
@@ -12,9 +12,21 @@ namespace SEOBoostAI.Repository.Repositories
 {
     public class KeywordRepository: GenericRepository<Keyword>
     {
-        public KeywordRepository() => _context ??= new SEOBoostAIContext();
-        public KeywordRepository(SEOBoostAIContext context) => _context = context;
+        /// <summary>
+/// Initializes a new instance of the <see cref="KeywordRepository"/> class with a default <see cref="SEOBoostAIContext"/> if none exists.
+/// </summary>
+public KeywordRepository() => _context ??= new SEOBoostAIContext();
+        /// <summary>
+/// Initializes a new instance of the <see cref="KeywordRepository"/> class using the specified database context.
+/// </summary>
+/// <param name="context">The database context to be used for keyword data operations.</param>
+public KeywordRepository(SEOBoostAIContext context) => _context = context;
 
+        /// <summary>
+        /// Asynchronously retrieves a paginated, filtered, and sorted list of keywords based on the criteria specified in the provided search request.
+        /// </summary>
+        /// <param name="keywordSearchRequest">The search and pagination criteria, including filters, sorting options, and page information.</param>
+        /// <returns>A <see cref="PaginationResult{List{Keyword}}"/> containing the list of matching keywords and pagination metadata.</returns>
         public async Task<PaginationResult<List<Keyword>>> GetAllAsync(KeywordSearchRequest keywordSearchRequest)
         {
             // Bắt đầu truy vấn

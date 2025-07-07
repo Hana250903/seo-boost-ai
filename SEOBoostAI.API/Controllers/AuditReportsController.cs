@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +24,14 @@ namespace SEOBoostAI.API.Controllers
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
         private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5001";
-        //private readonly string _flaskApiBaseUrl = "https://seo-flask-api.azurewebsites.net/";
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuditReportsController"/> class with the specified services and HTTP client.
+        /// </summary>
+        /// <param name="auditReportService">Service for managing audit reports.</param>
+        /// <param name="currentUserService">Service for accessing the current user context.</param>
+        /// <param name="elementService">Service for managing audit elements.</param>
+        /// <param name="mapper">Object mapper for model transformations.</param>
+        /// <param name="httpClient">HTTP client for external API communication.</param>
 
         public AuditReportsController(IAuditReportService auditReportService, ICurrentUserService currentUserService, IElementService elementService, IMapper mapper,
             HttpClient httpClient)
@@ -36,6 +43,10 @@ namespace SEOBoostAI.API.Controllers
             _httpClient = httpClient;
         }
 
+        /// <summary>
+        /// Retrieves a list of all audit reports.
+        /// </summary>
+        /// <returns>A list of all <see cref="AuditReport"/> objects.</returns>
         [HttpGet]
         public async Task<List<AuditReport>> GetAllAudit()
         {
@@ -90,12 +101,24 @@ namespace SEOBoostAI.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Retrieves all audit reports associated with the specified user ID.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user whose audit reports are to be retrieved.</param>
+        /// <returns>A list of audit reports belonging to the specified user.</returns>
         [HttpGet("user/{userId}")]
         public async Task<List<AuditReport>> GetByUserId(int userId)
         {
             return await _auditReportService.GetByUserId(userId);
         }
 
+        /// <summary>
+        /// Prepares and returns an SEO advisory request object for a given audit report, including its failed elements.
+        /// </summary>
+        /// <param name="auditId">The ID of the audit report to analyze.</param>
+        /// <returns>
+        /// An HTTP 200 response containing the constructed advisory request object if failed elements are found; otherwise, a 400 Bad Request if no failed elements exist for the specified audit report.
+        /// </returns>
         [HttpPost("advisor")]
         public async Task<IActionResult> SEOAdvisor([FromBody] int auditId)
         {
