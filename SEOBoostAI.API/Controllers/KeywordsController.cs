@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
@@ -58,13 +58,22 @@ namespace SEOBoostAI.API.Controllers
             return await _service.UpdateAsync(keyword);
         }
 
-        // DELETE api/<KeywordsController>/5
+        /// <summary>
+        /// Deletes a keyword by its ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the keyword to delete.</param>
+        /// <returns>True if the keyword was successfully deleted; otherwise, false.</returns>
         [HttpDelete("{id}")]
         public async Task<bool> Delete(int id)
         {
             return await _service.DeleteAsync(id);
         }
 
+        /// <summary>
+        /// Searches for keywords based on the specified criteria and returns a paginated result.
+        /// </summary>
+        /// <param name="keywordSearchRequest">The search criteria and pagination parameters.</param>
+        /// <returns>A paginated list of keywords matching the search criteria.</returns>
         [HttpPost]
         [Route("search-keyword")]
         public async Task<PaginationResult<List<Keyword>>> Search(KeywordSearchRequest keywordSearchRequest)
@@ -72,6 +81,11 @@ namespace SEOBoostAI.API.Controllers
             return await _service.GetAllAsync(keywordSearchRequest);
         }
 
+        /// <summary>
+        /// Sends a keyword to an external Flask API to generate SEO keywords and returns the API's response.
+        /// </summary>
+        /// <param name="inputKeyword">The request containing the input keyword to be processed by the Flask API.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the Flask API's response, or an error message if the request fails or the input is invalid.</returns>
         [HttpPost]
         [Route("search")]
         public async Task<IActionResult> Get([FromBody]KeywordFlaskApiRequest inputKeyword)

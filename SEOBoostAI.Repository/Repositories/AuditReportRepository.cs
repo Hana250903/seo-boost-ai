@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SEOBoostAI.Repository.GenericRepository;
 using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
@@ -54,6 +54,11 @@ namespace SEOBoostAI.Repository.Repositories
             return auditReports ?? new List<AuditReport>();
         }
 
+        /// <summary>
+        /// Asynchronously retrieves all audit reports associated with the specified user ID.
+        /// </summary>
+        /// <param name="userId">The unique identifier of the user whose audit reports are to be retrieved.</param>
+        /// <returns>A list of <see cref="AuditReport"/> entities belonging to the specified user.</returns>
         public async Task<List<AuditReport>> GetByUserId(int userId)
         {
             return await _context.AuditReports.Where(a => a.UserId == userId).ToListAsync();
