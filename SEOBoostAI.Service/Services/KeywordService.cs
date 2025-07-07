@@ -32,9 +32,9 @@ namespace SEOBoostAI.Service.Services
             return await _repository.GetAllAsync();
         }
 
-        public async Task<PaginationResult<List<Keyword>>> GetAllAsync(string keyword, int pageIndex, int pageSize)
+        public async Task<PaginationResult<List<Keyword>>> GetAllAsync(KeywordSearchRequest keywordSearchRequest)
         {
-            return await _repository.GetAllAsync(keyword, pageIndex, pageSize);
+            return await _repository.GetAllAsync(keywordSearchRequest);
         }
 
         public async Task<Keyword> GetByIdAsync(int id)

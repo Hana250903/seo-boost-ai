@@ -58,5 +58,12 @@ namespace SEOBoostAI.Repository.Repositories
         {
             return await _context.AuditReports.Where(a => a.UserId == userId).ToListAsync();
         }
+
+        //public async Task<AuditReport> GetAuditReportAndElement (int id)
+        //{
+        //    var auditReport = await _context.AuditReports.Where(a => a.Id == id)
+        //        .Include(a => a.Elements)
+        //        .FirstOrDefaultAsync();
+        //}
     }
 }
