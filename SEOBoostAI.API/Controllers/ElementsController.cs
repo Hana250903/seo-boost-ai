@@ -51,5 +51,11 @@ namespace SEOBoostAI.API.Controllers
         {
             return await _elementService.DeleteElementAsync(id);
         }
+
+        [HttpGet("not-pass/{auditId}")]
+        public async Task<List<Element>> GetElementsNotPass (int auditId)
+        {
+            return await _elementService.ElementNotPass(auditId);
+        }
     }
 }

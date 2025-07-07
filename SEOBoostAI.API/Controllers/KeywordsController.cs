@@ -65,10 +65,11 @@ namespace SEOBoostAI.API.Controllers
             return await _service.DeleteAsync(id);
         }
 
-        [HttpGet("search/{keyword}/{pageIndex}/{pageSize}")]
-        public async Task<PaginationResult<List<Keyword>>> Search(string keyword, int pageIndex, int pageSize)
+        [HttpPost]
+        [Route("search-keyword")]
+        public async Task<PaginationResult<List<Keyword>>> Search(KeywordSearchRequest keywordSearchRequest)
         {
-            return await _service.GetAllAsync(keyword, pageIndex, pageSize);
+            return await _service.GetAllAsync(keywordSearchRequest);
         }
 
         [HttpPost]

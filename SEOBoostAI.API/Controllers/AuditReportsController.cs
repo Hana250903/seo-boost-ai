@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using SEOBoostAI.API.VIewModels.Requests;
+using SEOBoostAI.API.VIewModels.Responses;
 using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
+using SEOBoostAI.Service.Services;
 using SEOBoostAI.Service.Services.Interfaces;
 using SEOBoostAI.Service.Ultils;
+using System.Net.Http;
 
 namespace SEOBoostAI.API.Controllers
 {
@@ -14,11 +20,20 @@ namespace SEOBoostAI.API.Controllers
     {
         private readonly IAuditReportService _auditReportService;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IElementService _elementService;
+        private readonly IMapper _mapper;
+        private readonly HttpClient _httpClient;
+        private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5001";
+        //private readonly string _flaskApiBaseUrl = "https://seo-flask-api.azurewebsites.net/";
 
-        public AuditReportsController(IAuditReportService auditReportService, ICurrentUserService currentUserService)
+        public AuditReportsController(IAuditReportService auditReportService, ICurrentUserService currentUserService, IElementService elementService, IMapper mapper,
+            HttpClient httpClient)
         {
             _auditReportService = auditReportService;
             _currentUserService = currentUserService;
+            _elementService = elementService;
+            _mapper = mapper;
+            _httpClient = httpClient;
         }
 
         [HttpGet]
@@ -79,6 +94,76 @@ namespace SEOBoostAI.API.Controllers
         public async Task<List<AuditReport>> GetByUserId(int userId)
         {
             return await _auditReportService.GetByUserId(userId);
+        }
+
+        [HttpPost("advisor")]
+        public async Task<IActionResult> SEOAdvisor([FromBody] int auditId)
+        {
+            var auditRequest = await _auditReportService.GetAuditByIdAsync(auditId);
+            var element = await _elementService.ElementNotPass(auditId);
+
+            if (element == null || !element.Any())
+            {
+                return BadRequest("No failed elements found for the provided audit report ID.");
+            }
+
+            var elementFailed = _mapper.Map<List<SEOBoostAI.API.VIewModels.Requests.Element>>(element);
+
+            var auditReportFlashApi = new AuditRepostFlashApiRequest
+            {
+                Id = auditRequest.Id,
+                UserId = auditRequest.UserId,
+                Url = auditRequest.Url,
+                OverallScore = auditRequest.OverallScore,
+                CriticalIssue = auditRequest.CriticalIssue,
+                Warning = auditRequest.Warning,
+                Opportunity = auditRequest.Opportunity,
+                PassedCheck = auditRequest.PassedCheck,
+                FailedElements = elementFailed
+            };
+
+            //string flaskApiEndpoint = $"{_flaskApiBaseUrl}/seo-advisor";
+
+            //try
+            //{
+            //    // Send a POST request to the Flask API
+            //    // The 'PostAsJsonAsync' method automatically serializes the 'input' object to JSON
+            //    HttpResponseMessage response = await _httpClient.PostAsJsonAsync(flaskApiEndpoint, auditReportFlashApi);
+
+            //    // Ensure the request was successful
+            //    response.EnsureSuccessStatusCode(); // Throws an exception if the status code is not 2xx
+
+            //    // Read and deserialize the JSON response from the Flask API
+            //    // The 'ReadFromJsonAsync' method automatically deserializes the JSON to FlaskApiResponse object
+            //    AuditAdvisorResponse? flaskApiResponse = await response.Content.ReadFromJsonAsync<AuditAdvisorResponse>();
+
+            //    if (flaskApiResponse == null)
+            //    {
+            //        return StatusCode(500, "Failed to deserialize response from Flask API.");
+            //    }
+
+            //    return Ok(flaskApiResponse); // Return the Flask API's response to the client
+            //}
+            //catch (HttpRequestException ex)
+            //{
+            //    // Handle HTTP request errors (e.g., network issues, Flask API not running)
+            //    Console.Error.WriteLine($"HTTP Request Error: {ex.Message}");
+            //    return StatusCode(500, $"Error communicating with Flask API: {ex.Message}");
+            //}
+            //catch (JsonException ex)
+            //{
+            //    // Handle JSON deserialization errors
+            //    Console.Error.WriteLine($"JSON Deserialization Error: {ex.Message}");
+            //    return StatusCode(500, $"Error processing Flask API response: {ex.Message}");
+            //}
+            //catch (Exception ex)
+            //{
+            //    // Handle any other unexpected errors
+            //    Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
+            //    return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
+            //}
+
+            return Ok(auditReportFlashApi);
         }
     }
 }
