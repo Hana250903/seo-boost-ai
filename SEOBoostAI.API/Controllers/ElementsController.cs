@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Repository.ModelExtensions;
 using SEOBoostAI.Repository.Models;
@@ -46,12 +46,22 @@ namespace SEOBoostAI.API.Controllers
             return await _elementService.UpdateElementAsync(Element);
         }
 
+        /// <summary>
+        /// Deletes the Element with the specified ID.
+        /// </summary>
+        /// <param name="id">The unique identifier of the Element to delete.</param>
+        /// <returns>True if the Element was successfully deleted; otherwise, false.</returns>
         [HttpDelete]
         public async Task<bool> DeleteElement(int id)
         {
             return await _elementService.DeleteElementAsync(id);
         }
 
+        /// <summary>
+        /// Retrieves a list of elements that did not pass the specified audit.
+        /// </summary>
+        /// <param name="auditId">The identifier of the audit to filter elements by.</param>
+        /// <returns>A list of elements that did not pass the given audit.</returns>
         [HttpGet("not-pass/{auditId}")]
         public async Task<List<Element>> GetElementsNotPass (int auditId)
         {

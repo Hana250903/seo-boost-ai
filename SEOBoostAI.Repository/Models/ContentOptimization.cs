@@ -11,6 +11,8 @@ public partial class ContentOptimization
 
     public int UserId { get; set; }
 
+    public string Model { get; set; }
+
     public string Keyword { get; set; }
 
     public string OriginalContent { get; set; }
@@ -34,4 +36,6 @@ public partial class ContentOptimization
     public int? Originality { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public virtual User User { get; set; }
 }

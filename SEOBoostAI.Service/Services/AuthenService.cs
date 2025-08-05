@@ -21,14 +21,18 @@ namespace SEOBoostAI.Service.Services
     {
         private readonly IConfiguration _configuration;
         private readonly UserRepository _userRepository;
+        private readonly WalletRepository _walletRepository;
+        private readonly UserAccountSubscriptionRepository _userAccountSubscriptionRepository;
 
         /// <summary>
         /// Initializes a new instance of the AuthenService with the specified configuration and user repository.
         /// </summary>
-        public AuthenService(IConfiguration configuration, UserRepository userRepository)
+        public AuthenService(IConfiguration configuration, UserRepository userRepository, WalletRepository walletRepository, UserAccountSubscriptionRepository userAccountSubscriptionRepository)
         {
             _configuration = configuration;
             _userRepository = userRepository;
+            _walletRepository = walletRepository;
+            _userAccountSubscriptionRepository = userAccountSubscriptionRepository;
         }
 
         /// <summary>
@@ -66,6 +70,21 @@ namespace SEOBoostAI.Service.Services
 
                 await _userRepository.UpdateAsync(existUser);
 
+                // Check if the user has an active subscription
+                var isExpired = await _userAccountSubscriptionRepository.IsExpired(existUser.Id);
+                if (isExpired)
+                {
+                    // If the subscription is expired, you can handle it here (e.g., notify the user, update UI, etc.)
+                    // For now, we just return the tokens.
+                    return new ResultModel()
+                    {
+                        Success = true,
+                        Message = "Login successfully, but user account subscription expired",
+                        AccessToken = accessToken,
+                        RefreshToken = refreshToken
+                    };
+                }
+
                 return new ResultModel()
                 {
                     Success = true,
@@ -85,17 +104,11 @@ namespace SEOBoostAI.Service.Services
                         FullName = payload.Name,
                         Email = payload.Email,
                         Role = "User",
-                        Avatar = "".Trim(),
-                        AccountType = "Free",
+                        Avatar = payload.Picture,
                         Password = "".Trim(),
                         CreatedAt = DateTime.UtcNow,
                         GoogleId = payload.JwtId
                     };
-
-                    //newUser.Wallet = new Wallet
-                    //{
-                    //    Currency = 0.0M
-                    //};
 
                     var accessToken = await GenerateAccessToken(newUser);
                     var refreshToken = GenerateRefreshToken(newUser.Email);
@@ -106,6 +119,32 @@ namespace SEOBoostAI.Service.Services
 
                     if (result > 0)
                     {
+                        var user = await _userRepository.GetUserByEmailAsync(newUser.Email);
+
+                        Wallet wallet = new Wallet()
+                        {
+                            Currency = 0.0M,
+                            CreatedAt = DateTime.UtcNow,
+                            UserId = user.Id
+                        };
+
+                        var walletResult = await _walletRepository.CreateAsync(wallet);
+                        if (walletResult > 0)
+                        {
+                            UserAccountSubscription userAccountSubscription = new UserAccountSubscription()
+                            {
+                                UserId = user.Id,
+                                AccountTypeId = 1,
+                                StartDate = DateTime.UtcNow,
+                                IsActive = true
+                            };
+                            var accountSubscriptionResult = await _userAccountSubscriptionRepository.CreateAsync(userAccountSubscription);
+                            if (accountSubscriptionResult <= 0)
+                            {
+                                throw new Exception("Failed to create user account subscription");
+                            }
+                        }
+
                         return new ResultModel()
                         {
                             Success = true,

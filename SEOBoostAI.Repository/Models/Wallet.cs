@@ -5,21 +5,19 @@ using System.Collections.Generic;
 
 namespace SEOBoostAI.Repository.Models;
 
-public partial class RankTracking
+public partial class Wallet
 {
     public int Id { get; set; }
 
     public int UserId { get; set; }
 
-    public string Model { get; set; }
+    public decimal Currency { get; set; }
 
-    public string Keyword { get; set; }
+    public DateTime CreatedAt { get; set; }
 
-    public int? Rank { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
-    public DateTime CreatedDate { get; set; }
-
-    public DateTime? UpdatedDate { get; set; }
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     public virtual User User { get; set; }
 }

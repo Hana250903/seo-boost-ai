@@ -21,8 +21,6 @@ public partial class User
 
     public string Avatar { get; set; }
 
-    public string AccountType { get; set; }
-
     public string GoogleId { get; set; }
 
     public string AccessToken { get; set; }
@@ -30,4 +28,18 @@ public partial class User
     public string RefreshToken { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
+    public virtual ICollection<AuditReport> AuditReports { get; set; } = new List<AuditReport>();
+
+    public virtual ICollection<ContentOptimization> ContentOptimizations { get; set; } = new List<ContentOptimization>();
+
+    public virtual ICollection<Keyword> Keywords { get; set; } = new List<Keyword>();
+
+    public virtual ICollection<RankTracking> RankTrackings { get; set; } = new List<RankTracking>();
+
+    public virtual ICollection<UserAccountSubscription> UserAccountSubscriptions { get; set; } = new List<UserAccountSubscription>();
+
+    public virtual ICollection<UserFeaturePurchase> UserFeaturePurchases { get; set; } = new List<UserFeaturePurchase>();
+
+    public virtual Wallet Wallet { get; set; }
 }

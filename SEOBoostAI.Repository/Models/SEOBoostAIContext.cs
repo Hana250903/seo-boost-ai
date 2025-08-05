@@ -18,17 +18,29 @@ public partial class SEOBoostAIContext : DbContext
     {
     }
 
+    public virtual DbSet<AccountType> AccountTypes { get; set; }
+
     public virtual DbSet<AuditReport> AuditReports { get; set; }
 
     public virtual DbSet<ContentOptimization> ContentOptimizations { get; set; }
 
     public virtual DbSet<Element> Elements { get; set; }
 
+    public virtual DbSet<Feature> Features { get; set; }
+
     public virtual DbSet<Keyword> Keywords { get; set; }
 
     public virtual DbSet<RankTracking> RankTrackings { get; set; }
 
+    public virtual DbSet<Transaction> Transactions { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<UserAccountSubscription> UserAccountSubscriptions { get; set; }
+
+    public virtual DbSet<UserFeaturePurchase> UserFeaturePurchases { get; set; }
+
+    public virtual DbSet<Wallet> Wallets { get; set; }
 
     public static string GetConnectionString(string connectionStringName)
     {
@@ -42,20 +54,38 @@ public partial class SEOBoostAIContext : DbContext
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=HANAYUKI;Initial Catalog=SEOBoostAI;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=False");
+    //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+    //        => optionsBuilder.UseSqlServer("Data Source=HANAYUKI;Initial Catalog=SEOBoostAI;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AuditReport>(entity =>
+        modelBuilder.Entity<AccountType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AuditRep__3214EC271B2201F7");
+            entity.HasKey(e => e.Id).HasName("PK__AccountT__3214EC2783EA0874");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
+        });
+
+        modelBuilder.Entity<AuditReport>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__AuditRep__3214EC2712B2932A");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Model).HasMaxLength(50);
             entity.Property(e => e.PassedCheck)
                 .IsRequired()
                 .HasMaxLength(255);
@@ -63,33 +93,44 @@ public partial class SEOBoostAIContext : DbContext
                 .IsRequired()
                 .HasMaxLength(255);
             entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.AuditReports)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<ContentOptimization>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ContentO__3214EC27A4C46D61");
+            entity.HasKey(e => e.Id).HasName("PK__ContentO__3214EC278B65CC38");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.ContentLenght)
                 .IsRequired()
                 .HasMaxLength(20);
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.IncludeCitation).HasDefaultValue(true);
             entity.Property(e => e.Keyword)
                 .IsRequired()
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.Model).HasMaxLength(50);
             entity.Property(e => e.OriginalContent).IsRequired();
             entity.Property(e => e.ReadabilityLevel)
                 .IsRequired()
                 .HasMaxLength(20);
             entity.Property(e => e.Seoscore).HasColumnName("SEOScore");
             entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ContentOptimizations)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<Element>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Elements__3214EC270794D100");
+            entity.HasKey(e => e.Id).HasName("PK__Elements__3214EC271C6B405F");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.AuditReportId).HasColumnName("AuditReportID");
@@ -108,12 +149,24 @@ public partial class SEOBoostAIContext : DbContext
 
             entity.HasOne(d => d.AuditReport).WithMany(p => p.Elements)
                 .HasForeignKey(d => d.AuditReportId)
-                .HasConstraintName("FK__Elements__AuditR__5535A963");
+                .HasConstraintName("FK__Elements__AuditR__5FB337D6");
+        });
+
+        modelBuilder.Entity<Feature>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Features__3214EC27F5EB1146");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
         });
 
         modelBuilder.Entity<Keyword>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Keywords__3214EC27DAE011D5");
+            entity.HasKey(e => e.Id).HasName("PK__Keywords__3214EC27248865CF");
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Competition)
@@ -129,35 +182,76 @@ public partial class SEOBoostAIContext : DbContext
                 .IsRequired()
                 .HasMaxLength(100)
                 .HasColumnName("Keyword");
+            entity.Property(e => e.Model).HasMaxLength(50);
             entity.Property(e => e.SearchKeyword).HasMaxLength(100);
             entity.Property(e => e.Trend)
                 .IsRequired()
                 .HasMaxLength(20);
             entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Keywords)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<RankTracking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RankTrac__3214EC27A1758FCB");
+            entity.HasKey(e => e.Id).HasName("PK__RankTrac__3214EC27C37D36A0");
 
             entity.ToTable("RankTracking");
 
             entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Keyword).HasMaxLength(100);
+            entity.Property(e => e.Model).HasMaxLength(50);
+            entity.Property(e => e.UpdatedDate).HasColumnType("datetime");
             entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.RankTrackings)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
+        });
+
+        modelBuilder.Entity<Transaction>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC275D358FD8");
+
+            entity.HasIndex(e => e.BankTransId, "UQ__Transact__EC449DA4657A2626").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.BankTransId).HasMaxLength(100);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(255);
+            entity.Property(e => e.Money).HasColumnType("money");
+            entity.Property(e => e.Status)
+                .IsRequired()
+                .HasMaxLength(20)
+                .HasDefaultValue("Pending");
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .HasDefaultValue("Deposit");
+            entity.Property(e => e.WalletId).HasColumnName("WalletID");
+
+            entity.HasOne(d => d.Wallet).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.WalletId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Transacti__Walle__6754599E");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC27D098DAAB");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC2765BD64A1");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E485CC21F3").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E422D9AE81").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.AccountType)
-                .IsRequired()
-                .HasMaxLength(20);
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Email)
                 .IsRequired()
                 .HasMaxLength(255);
@@ -166,12 +260,75 @@ public partial class SEOBoostAIContext : DbContext
                 .HasMaxLength(255);
             entity.Property(e => e.GoogleId).HasColumnName("GoogleID");
             entity.Property(e => e.Password).HasMaxLength(255);
-            entity.Property(e => e.Role)
-                .HasMaxLength(50)
-                .HasDefaultValue("User");
+            entity.Property(e => e.Role).HasMaxLength(50);
             entity.Property(e => e.Username)
                 .IsRequired()
                 .HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<UserAccountSubscription>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UserAcco__3214EC27E508BBF7");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.AccountTypeId).HasColumnName("AccountTypeID");
+            entity.Property(e => e.EndDate).HasColumnType("datetime");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.StartDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.AccountType).WithMany(p => p.UserAccountSubscriptions)
+                .HasForeignKey(d => d.AccountTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserAccou__Accou__6E01572D");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserAccountSubscriptions)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserAccou__UserI__6D0D32F4");
+        });
+
+        modelBuilder.Entity<UserFeaturePurchase>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UserFeat__3214EC27C57704CC");
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.FeatureId).HasColumnName("FeatureID");
+            entity.Property(e => e.PurchaseDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.Feature).WithMany(p => p.UserFeaturePurchases)
+                .HasForeignKey(d => d.FeatureId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserFeatu__Featu__73BA3083");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserFeaturePurchases)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__UserFeatu__UserI__72C60C4A");
+        });
+
+        modelBuilder.Entity<Wallet>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Wallets__3214EC2729B9E3CF");
+
+            entity.HasIndex(e => e.UserId, "UQ__Wallets__1788CCAD839FF49A").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("ID");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Currency).HasColumnType("money");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UserId).HasColumnName("UserID");
+
+            entity.HasOne(d => d.User).WithOne(p => p.Wallet)
+                .HasForeignKey<Wallet>(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         OnModelCreatingPartial(modelBuilder);
