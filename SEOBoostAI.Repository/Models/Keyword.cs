@@ -9,7 +9,7 @@ public partial class Keyword
 {
     public int Id { get; set; }
 
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public string Model { get; set; }
 

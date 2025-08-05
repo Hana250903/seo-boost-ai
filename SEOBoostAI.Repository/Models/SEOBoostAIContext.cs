@@ -191,7 +191,7 @@ public partial class SEOBoostAIContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Keywords)
                 .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         modelBuilder.Entity<RankTracking>(entity =>
