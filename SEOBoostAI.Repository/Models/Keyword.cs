@@ -11,6 +11,8 @@ public partial class Keyword
 
     public int UserId { get; set; }
 
+    public string Model { get; set; }
+
     public string SearchKeyword { get; set; }
 
     public string Keyword1 { get; set; }
@@ -28,4 +30,6 @@ public partial class Keyword
     public string Trend { get; set; }
 
     public int Rank { get; set; }
+
+    public virtual User User { get; set; }
 }

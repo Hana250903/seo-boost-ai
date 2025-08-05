@@ -11,6 +11,8 @@ public partial class AuditReport
 
     public int UserId { get; set; }
 
+    public string Model { get; set; }
+
     public string Url { get; set; }
 
     public int OverallScore { get; set; }
@@ -26,4 +28,6 @@ public partial class AuditReport
     public DateTime CreatedAt { get; set; }
 
     public virtual ICollection<Element> Elements { get; set; } = new List<Element>();
+
+    public virtual User User { get; set; }
 }

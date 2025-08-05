@@ -41,7 +41,7 @@ namespace SEOBoostAI.Repository.Repositories
         {
             _context.AuditReports.Add(auditReport);
             await _context.SaveChangesAsync();
-            return auditReport.Id; // Lúc này auditReport.Id đã được gán tự động bởi DB
+            return auditReport.Id;
         }
 
         public async Task<List<AuditReport>> GetAllAsync(int userId)

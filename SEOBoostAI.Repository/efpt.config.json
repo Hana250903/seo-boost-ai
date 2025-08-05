@@ -4,6 +4,7 @@
    "ContextNamespace": null,
    "FilterSchemas": false,
    "IncludeConnectionString": true,
+   "MinimumProductVersion": "2.6.0",
    "ModelNamespace": null,
    "OutputContextPath": null,
    "OutputPath": "Models",
@@ -14,6 +15,10 @@
    "SelectedToBeGenerated": 0,
    "T4TemplatePath": null,
    "Tables": [
+      {
+         "Name": "[dbo].[AccountTypes]",
+         "ObjectType": 0
+      },
       {
          "Name": "[dbo].[AuditReports]",
          "ObjectType": 0
@@ -27,6 +32,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Features]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Keywords]",
          "ObjectType": 0
       },
@@ -35,7 +44,23 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Transactions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserAccountSubscriptions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[UserFeaturePurchases]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Users]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Wallets]",
          "ObjectType": 0
       }
    ],

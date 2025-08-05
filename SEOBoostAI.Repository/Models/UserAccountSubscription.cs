@@ -5,21 +5,21 @@ using System.Collections.Generic;
 
 namespace SEOBoostAI.Repository.Models;
 
-public partial class RankTracking
+public partial class UserAccountSubscription
 {
     public int Id { get; set; }
 
     public int UserId { get; set; }
 
-    public string Model { get; set; }
+    public int AccountTypeId { get; set; }
 
-    public string Keyword { get; set; }
+    public DateTime StartDate { get; set; }
 
-    public int? Rank { get; set; }
+    public DateTime? EndDate { get; set; }
 
-    public DateTime CreatedDate { get; set; }
+    public bool IsActive { get; set; }
 
-    public DateTime? UpdatedDate { get; set; }
+    public virtual AccountType AccountType { get; set; }
 
     public virtual User User { get; set; }
 }

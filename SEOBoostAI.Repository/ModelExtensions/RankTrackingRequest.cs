@@ -10,5 +10,6 @@ namespace SEOBoostAI.Repository.ModelExtensions
     {
         public int Id { get; set; }
         public int Rank { get; set; }
+        public DateTime UpdatedDate { get; set; }
     }
 }

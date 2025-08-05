@@ -17,7 +17,17 @@ namespace SEOBoostAI.API
             services.AddScoped<IElementService, ElementService>();
             services.AddScoped<IAuthenService, AuthenService>();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IWalletService, WalletService>();
+            services.AddScoped<IFeatureService, FeatureService>();
+            services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IAccountTypeService, AccountTypeService>();
+            services.AddScoped<IUserAccountSubscriptionService, UserAccountSubscriptionService>();
             services.AddScoped<UserRepository>();
+            services.AddScoped<WalletRepository>();
+            services.AddScoped<FeatureRepository>();
+            services.AddScoped<TransactionRepository>();
+            services.AddScoped<AccountTypeRepository>();
+            services.AddScoped<UserAccountSubscriptionRepository>();
             services.AddHttpClient();
             return services;
         }

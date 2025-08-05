@@ -55,11 +55,11 @@ namespace SEOBoostAI.Repository.Repositories
                 if (request != null)
                 {
                     tracking.Rank = request.Rank;
+                    tracking.UpdatedDate = request.UpdatedDate;
                 }
             }
             _context.RankTrackings.UpdateRange(rankTrackings);
             return await _context.SaveChangesAsync();
         }
-
     }
 }

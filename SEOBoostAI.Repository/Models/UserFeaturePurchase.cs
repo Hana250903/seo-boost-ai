@@ -5,21 +5,19 @@ using System.Collections.Generic;
 
 namespace SEOBoostAI.Repository.Models;
 
-public partial class RankTracking
+public partial class UserFeaturePurchase
 {
     public int Id { get; set; }
 
     public int UserId { get; set; }
 
-    public string Model { get; set; }
+    public int FeatureId { get; set; }
 
-    public string Keyword { get; set; }
+    public DateTime PurchaseDate { get; set; }
 
-    public int? Rank { get; set; }
+    public bool IsUsed { get; set; }
 
-    public DateTime CreatedDate { get; set; }
-
-    public DateTime? UpdatedDate { get; set; }
+    public virtual Feature Feature { get; set; }
 
     public virtual User User { get; set; }
 }
