@@ -61,5 +61,12 @@ namespace SEOBoostAI.Repository.Repositories
             _context.RankTrackings.UpdateRange(rankTrackings);
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<List<RankTracking>> GetRankTrackingsByUserId(int userId)
+        {
+            return await _context.RankTrackings
+                .Where(rt => rt.UserId == userId)
+                .ToListAsync();
+        }
     }
 }

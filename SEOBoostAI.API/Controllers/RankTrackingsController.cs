@@ -75,57 +75,6 @@ namespace SEOBoostAI.API.Controllers
         [Route("rank-tracking/{userId}/{pageIndex}/{pageSize}")]
         public async Task<PaginationResult<List<RankTracking>>> Get(int userId, int pageIndex, int pageSize)
         {
-            //var currentUserId = _currentUserService.GetUserId();
-            var rankTrackingList = await _service.GetAllAsync(userId, pageIndex, pageSize);
-
-            if (rankTrackingList == null || rankTrackingList.Items == null)
-            {
-                return rankTrackingList ?? new PaginationResult<List<RankTracking>>();
-            }
-            string flaskApiEndpoint = $"{_flaskApiBaseUrl}/update-rank-tracking";
-
-            var requestData = new List<RankTrackingUpdateRequest>();
-
-            foreach (var item in rankTrackingList.Items)
-            {
-                var requestItem = new RankTrackingUpdateRequest
-                {
-                    Id = item.Id.ToString(),
-                    InputKeyword = item.Keyword,
-                };
-                requestData.Add(requestItem);
-            }
-
-            try
-            {
-                HttpResponseMessage response = await _httpClient.PostAsJsonAsync(flaskApiEndpoint, requestData);
-
-                response.EnsureSuccessStatusCode();
-
-                FlaskApiResponse? flaskApiResponse = await response.Content.ReadFromJsonAsync<FlaskApiResponse>();
-
-                if (flaskApiResponse == null)
-                {
-                    throw new Exception("Code 500, failed to deserialize response from Flask API.");
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                // Handle HTTP request errors (e.g., network issues, Flask API not running)
-                Console.Error.WriteLine($"HTTP Request Error: {ex.Message}");
-                throw new Exception($"Error communicating with Flask API: {ex.Message}");
-            }
-            catch (JsonException ex)
-            {
-                // Handle JSON deserialization errors
-                Console.Error.WriteLine($"JSON Deserialization Error: {ex.Message}");
-                throw new Exception($"Error processing Flask API response: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error communicating with Flask API: {ex.Message}");
-            }
-
             return await _service.GetAllAsync(userId, pageIndex, pageSize);
         }
 
@@ -142,6 +91,16 @@ namespace SEOBoostAI.API.Controllers
             if (string.IsNullOrEmpty(inputKeyword.UserId))
             {
                 return BadRequest("Input keyword cannot be empty.");
+            }
+
+            var keyword = await _service.GetByUserIdAsync(int.Parse(inputKeyword.UserId));
+
+            foreach (var item in keyword)
+            {
+                if (item.Keyword.ToLower() == inputKeyword.InputKeyword.ToLower())
+                {
+                    return BadRequest("Keyword already exists.");
+                }
             }
 
             string flaskApiEndpoint = $"{_flaskApiBaseUrl}/rank-tracking";
@@ -193,6 +152,64 @@ namespace SEOBoostAI.API.Controllers
                 Console.Error.WriteLine($"An unexpected error occurred: {ex.Message}");
                 return StatusCode(500, $"An unexpected error occurred: {ex.Message}");
             }
+        }
+
+        [HttpPost]
+        [Route("update-rank-tracking")]
+        public async Task<IActionResult> UpdateRankTracking([FromBody] int userId)
+        {
+            var rankTrackingList = await _service.GetByUserIdAsync(userId);
+
+            if (rankTrackingList == null)
+            {
+                return NotFound();
+            }
+            string flaskApiEndpoint = $"{_flaskApiBaseUrl}/update-rank-tracking";
+
+            var requestData = new List<RankTrackingUpdateRequest>();
+
+            foreach (var item in rankTrackingList)
+            {
+                var requestItem = new RankTrackingUpdateRequest
+                {
+                    Id = item.Id.ToString(),
+                    InputKeyword = item.Keyword,
+                    OldRank = item.Rank.GetValueOrDefault()
+                };
+                requestData.Add(requestItem);
+            }
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync(flaskApiEndpoint, requestData);
+
+                response.EnsureSuccessStatusCode();
+
+                FlaskApiResponse? flaskApiResponse = await response.Content.ReadFromJsonAsync<FlaskApiResponse>();
+
+                if (flaskApiResponse == null)
+                {
+                    throw new Exception("Code 500, failed to deserialize response from Flask API.");
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                // Handle HTTP request errors (e.g., network issues, Flask API not running)
+                Console.Error.WriteLine($"HTTP Request Error: {ex.Message}");
+                throw new Exception($"Error communicating with Flask API: {ex.Message}");
+            }
+            catch (JsonException ex)
+            {
+                // Handle JSON deserialization errors
+                Console.Error.WriteLine($"JSON Deserialization Error: {ex.Message}");
+                throw new Exception($"Error processing Flask API response: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error communicating with Flask API: {ex.Message}");
+            }
+
+            return Ok();
         }
     }
 }

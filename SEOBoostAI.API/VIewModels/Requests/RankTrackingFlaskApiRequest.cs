@@ -20,5 +20,8 @@ namespace SEOBoostAI.API.VIewModels.Requests
 
         [JsonPropertyName("id")]
         public string Id { get; set; }
+
+        [JsonPropertyName("old_rank")]
+        public int OldRank { get; set; }
     } 
 }

@@ -13,6 +13,7 @@ namespace SEOBoostAI.Service.Services.Interfaces
         Task<List<RankTracking>> GetAllAsync();
         Task<PaginationResult<List<RankTracking>>> GetAllAsync(int userId, int pageIndex, int pageSize);
         Task<RankTracking> GetByIdAsync(int id);
+        Task<List<RankTracking>> GetByUserIdAsync(int userId);
         Task<int> AddAsync(RankTracking rankTracking);
         Task<int> UpdateAsync(RankTracking rankTracking);
         Task<int> UpdateAsync(List<RankTrackingRequest> rankTrackings);
