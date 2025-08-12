@@ -15,6 +15,7 @@ namespace SEOBoostAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ContentOptimizationsController : ControllerBase
     {
         private readonly ICurrentUserService _currentUserService;

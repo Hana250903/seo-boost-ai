@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SEOBoostAI.Repository.ModelExtensions;
@@ -8,6 +9,7 @@ namespace SEOBoostAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ElementsController : ControllerBase
     {
         private readonly IElementService _elementService;
