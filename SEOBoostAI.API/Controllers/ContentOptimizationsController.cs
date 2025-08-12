@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SEOBoostAI.API.VIewModels.Requests;
 using SEOBoostAI.API.VIewModels.Responses;
@@ -15,20 +16,23 @@ namespace SEOBoostAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class ContentOptimizationsController : ControllerBase
     {
         private readonly ICurrentUserService _currentUserService;
         private readonly IContentOptimizationService _service;
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
+
         //private readonly string _flaskApiBaseUrl = "http://127.0.0.1:5001";
         private readonly string _flaskApiBaseUrl = "https://seo-flask-api.azurewebsites.net";
 
-        public ContentOptimizationsController(IContentOptimizationService service, ICurrentUserService currentUserService, HttpClient httpClient)
+        public ContentOptimizationsController(IContentOptimizationService service, ICurrentUserService currentUserService, HttpClient httpClient, IConfiguration configuration)
         {
             _service = service;
             _currentUserService = currentUserService;
             _httpClient = httpClient;
+            _configuration = configuration;
         }
 
         // GET: api/<ContentOptimizationsController>
@@ -79,6 +83,8 @@ namespace SEOBoostAI.API.Controllers
 
             try
             {
+                //_httpClient.DefaultRequestHeaders.Add("X-API-KEY", _configuration["FlaskApiKey"]);
+
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync(flaskApiEndpoint, requestData);
 
                 response.EnsureSuccessStatusCode();
